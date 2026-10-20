@@ -7,7 +7,7 @@ use gpui::{
     Action, App, AppContext, Bounds, ClipboardItem, Context, Edges, Entity, EntityInputHandler,
     EventEmitter, FocusHandle, Focusable, InteractiveElement as _, IntoElement, KeyBinding,
     MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, ParentElement as _, Pixels, Point,
-    Render, ScrollHandle, ScrollWheelEvent, SharedString, StatefulInteractiveElement as _,
+    Render, ScrollHandle, ScrollEvent, SharedString, StatefulInteractiveElement as _,
     Styled as _, Subscription, UTF16Selection, WeakFocusHandle, Window, actions, div, point,
     prelude::FluentBuilder as _, px,
 };
@@ -2804,7 +2804,7 @@ impl<M: InputModeKind> InputBaseState<M> {
 
     pub(super) fn on_scroll_wheel(
         &mut self,
-        event: &ScrollWheelEvent,
+        event: &ScrollEvent,
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
@@ -5069,7 +5069,7 @@ impl<M: InputModeKind> Render for InputBaseState<M> {
                 window.listener_for(&entity, InputBaseState::on_mouse_up),
             )
             .on_mouse_move(window.listener_for(&entity, InputBaseState::on_mouse_move))
-            .on_scroll_wheel(window.listener_for(&entity, InputBaseState::on_scroll_wheel))
+            .on_scroll(window.listener_for(&entity, InputBaseState::on_scroll_wheel))
             .when(self.is_multi_line() && !self.disabled, |this| {
                 this.on_modifiers_changed(cx.listener(|_, _, _, cx| cx.notify()))
             })
